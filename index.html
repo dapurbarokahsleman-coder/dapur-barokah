@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dapoer Barokah - Jawa Klasik & Modern</title>
+    <meta name="description" content="Dapoer Barokah Sleman: Menyajikan hidangan warisan masakan rumahan dengan cita rasa Jawa klasik dan sentuhan modern.">
+    
+    <!-- Google Fonts: Playfair Display for Classic Javanese feel, Inter for Modern readability -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS for Modern Styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        jawa: {
+                            light: '#F4EFE6',    // Cream/Parchment
+                            dark: '#1C1512',     // Deep dark brown
+                            gold: '#D4AF37',     // Antique Gold
+                            goldHover: '#B5952F',
+                            brown: '#3E2723',    // Classic wood brown
+                            brownLight: '#5D4037',
+                            accent: '#8B0000'    // Deep red/terracotta
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #D4AF37; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #B5952F; }
+
+        /* Subtle Batik Kawung Pattern */
+        .batik-bg {
+            background-image: radial-gradient(circle at 10px 10px, rgba(212, 175, 55, 0.15) 2px, transparent 0),
+                              radial-gradient(circle at 30px 30px, rgba(212, 175, 55, 0.15) 2px, transparent 0);
+            background-size: 40px 40px;
+        }
+        .dark .batik-bg {
+            background-image: radial-gradient(circle at 10px 10px, rgba(212, 175, 55, 0.05) 2px, transparent 0),
+                              radial-gradient(circle at 30px 30px, rgba(212, 175, 55, 0.05) 2px, transparent 0);
+        }
+
+        /* Glassmorphism */
+        .glass {
+            background: rgba(244, 239, 230, 0.85);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+        }
+        .dark .glass {
+            background: rgba(28, 21, 18, 0.85);
+            border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+        }
+        
+        .card-hover {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(212, 175, 55, 0.2);
+        }
+    </style>
+</head>
+<body class="bg-jawa-light text-jawa-brown dark:bg-jawa-dark dark:text-gray-200 font-sans antialiased transition-colors duration-300 batik-bg relative">
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 glass transition-colors duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <!-- Logo -->
+                <div class="flex-shrink-0 flex items-center cursor-pointer" onclick="window.scrollTo(0,0)">
+                    <img src="IMG-20260215-WA0030.jpg" alt="Dapur Barokah Logo" class="h-16 w-auto object-contain">
+                </div>
+
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#home" class="hover:text-jawa-gold font-medium transition-colors" data-i18n="nav_home">Beranda</a>
+                    <a href="#about" class="hover:text-jawa-gold font-medium transition-colors" data-i18n="nav_about">Kisah Kami</a>
+                    <a href="#menu" class="hover:text-jawa-gold font-medium transition-colors" data-i18n="nav_menu">Menu</a>
+                    <a href="#footer" class="hover:text-jawa-gold font-medium transition-colors" data-i18n="nav_contact">Lokasi</a>
+                </div>
+
+                <!-- Actions (Theme & Lang Toggle) -->
+                <div class="hidden md:flex items-center space-x-4">
+                    <button id="langToggle" class="px-3 py-1 border border-jawa-gold text-jawa-gold rounded-full hover:bg-jawa-gold hover:text-white dark:hover:text-jawa-dark transition-all font-semibold text-sm">
+                        EN
+                    </button>
+                    <button id="themeToggle" class="p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition-colors text-jawa-gold" aria-label="Toggle Theme">
+                        <!-- Sun Icon -->
+                        <svg id="icon-sun" class="w-6 h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                        </svg>
+                        <!-- Moon Icon -->
+                        <svg id="icon-moon" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- Mobile menu button -->
+                <div class="md:hidden flex items-center space-x-4">
+                    <button id="langToggleMob" class="px-2 py-1 border border-jawa-gold text-jawa-gold rounded-full hover:bg-jawa-gold hover:text-white dark:hover:text-jawa-dark transition-all font-semibold text-xs">
+                        EN
+                    </button>
+                    <button id="mobile-menu-btn" class="text-jawa-brown dark:text-jawa-gold focus:outline-none">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu Panel -->
+        <div id="mobile-menu" class="hidden md:hidden bg-jawa-light/95 dark:bg-jawa-dark/95 backdrop-blur-md border-t border-jawa-gold/20">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="#home" class="block px-3 py-2 rounded-md text-base font-medium hover:text-jawa-gold" data-i18n="nav_home">Beranda</a>
+                <a href="#about" class="block px-3 py-2 rounded-md text-base font-medium hover:text-jawa-gold" data-i18n="nav_about">Kisah Kami</a>
+                <a href="#menu" class="block px-3 py-2 rounded-md text-base font-medium hover:text-jawa-gold" data-i18n="nav_menu">Menu</a>
+                <a href="#footer" class="block px-3 py-2 rounded-md text-base font-medium hover:text-jawa-gold" data-i18n="nav_contact">Lokasi</a>
+                <div class="px-3 py-2">
+                    <button id="themeToggleMob" class="flex items-center text-jawa-gold font-medium">
+                        <span id="theme-text-mob">Mode Gelap</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="pt-28 pb-16 md:pt-40 md:pb-24 overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                
+                <!-- Hero Text -->
+                <div class="relative z-10 text-center md:text-left">
+                    <div class="inline-block px-4 py-1 mb-6 rounded-full border border-jawa-gold/50 bg-jawa-gold/10 text-jawa-brown dark:text-jawa-gold text-sm font-semibold tracking-wide" data-i18n="hero_badge">
+                        Berdiri Sejak 2024
+                    </div>
+                    <h1 class="text-4xl md:text-5xl lg:text-6xl font-serif font-bold leading-tight mb-6 text-jawa-brown dark:text-white">
+                        <span data-i18n="hero_title_1">Cita Rasa Klasik Jawa,</span><br>
+                        <span class="text-jawa-gold italic" data-i18n="hero_title_2">Sentuhan Modern</span>
+                    </h1>
+                    <p class="text-lg md:text-xl mb-8 text-gray-700 dark:text-gray-300 max-w-lg mx-auto md:mx-0" data-i18n="hero_desc">
+                        Menyajikan kehangatan masakan rumahan dengan resep warisan Dapoer Barokah Sleman. Halal, lezat, dan penuh barokah.
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
+                        <a href="#menu" class="px-8 py-3 bg-jawa-gold text-white dark:text-jawa-dark font-semibold rounded-lg shadow-lg hover:bg-jawa-goldHover hover:shadow-xl transition-all text-center" data-i18n="hero_btn_1">
+                            Jelajah Menu
+                        </a>
+                        <a href="#footer" class="px-8 py-3 border border-jawa-brown dark:border-gray-300 text-jawa-brown dark:text-gray-300 font-semibold rounded-lg hover:bg-jawa-brown hover:text-white dark:hover:bg-gray-300 dark:hover:text-jawa-dark transition-all text-center" data-i18n="hero_btn_2">
+                            Kunjungi Kami
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Hero Image with Classic Frame -->
+                <div class="relative z-10">
+                    <div class="relative w-full aspect-square max-w-md mx-auto">
+                        <!-- Decorative classic borders -->
+                        <div class="absolute inset-0 border-2 border-jawa-gold rounded-t-full rounded-b-3xl transform translate-x-4 translate-y-4 opacity-50"></div>
+                        <img src="https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&q=80&w=800" alt="Indonesian Culinary" class="absolute inset-0 w-full h-full object-cover rounded-t-full rounded-b-3xl shadow-2xl z-10 border-4 border-white dark:border-jawa-dark">
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-20 bg-white/50 dark:bg-black/20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+                <!-- Image Side -->
+                <div class="order-2 md:order-1 relative">
+                    <img src="ChatGPT Image 18 Mei 2026, 10.40.19.png" alt="Admin Almahyra - Dapur Barokah" class="rounded-2xl shadow-xl w-full object-cover h-auto max-h-[600px] object-top">
+                    <div class="absolute -bottom-6 -right-6 bg-jawa-gold text-white dark:text-jawa-dark p-6 rounded-xl shadow-lg max-w-xs hidden md:block">
+                        <p class="font-serif italic text-lg">"Jika ingin makan, maka harus masak sendiri."</p>
+                        <p class="text-sm mt-2 font-semibold">- Pesan Sang Ibu</p>
+                    </div>
+                </div>
+
+                <!-- Text Side -->
+                <div class="order-1 md:order-2">
+                    <h2 class="text-sm font-bold text-jawa-gold tracking-widest uppercase mb-2" data-i18n="about_subtitle">Kisah Kami</h2>
+                    <h3 class="text-3xl md:text-4xl font-serif font-bold text-jawa-brown dark:text-white mb-6" data-i18n="about_title">Dari Dapur Kecil Menuju Dapoer Barokah</h3>
+                    <div class="space-y-4 text-gray-700 dark:text-gray-300 text-justify">
+                        <p data-i18n="about_p1">
+                            Bagi seorang Latif Safruddin, masa kecilnya dihabiskan dengan cara yang berbeda. Di saat teman sebaya menunggu hidangan siap, Latif kecil sudah mengakrabi kepulan asap dan aroma bumbu di dapur berkat didikan mandiri orang tuanya.
+                        </p>
+                        <p data-i18n="about_p2">
+                            Sejak SD, ia belajar memahami bagaimana rasa diciptakan. Apa yang awalnya keharusan untuk mengenyangkan perut, bertransformasi menjadi sebuah gairah yang mendalam.
+                        </p>
+                        <p data-i18n="about_p3">
+                            Kini, melalui <strong>Dapoer Barokah</strong> di Sleman, ia membuktikan bahwa keahlian yang dipupuk selama puluhan tahun mampu menjadi hidangan yang lezat, membawa keberkahan, dan dinikmati banyak orang.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Menu Section (Updated from Image) -->
+    <section id="menu" class="py-24 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="text-center mb-16">
+                <div class="inline-block px-4 py-1 mb-4 rounded-full bg-red-600 text-white text-sm font-bold tracking-wide" data-i18n="menu_badge">
+                    HALAL & HIGIENIS - BAHAN BERKUALITAS
+                </div>
+                <h2 class="text-sm font-bold text-jawa-gold tracking-widest uppercase mb-2" data-i18n="menu_subtitle">Daftar Menu</h2>
+                <h3 class="text-3xl md:text-5xl font-serif font-bold text-jawa-brown dark:text-white" data-i18n="menu_title">Murah, Kenyang & Enak!</h3>
+                <p class="mt-4 text-gray-600 dark:text-gray-400 font-medium" data-i18n="menu_tagline">NASIBOK ONLINE PERTAMA DI JOGJA</p>
+                <div class="w-24 h-1 bg-jawa-gold mx-auto mt-6 rounded-full"></div>
+            </div>
+
+            <!-- Menu Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                
+                <!-- Category: Nasgor Lauk -->
+                <div class="bg-white/80 dark:bg-jawa-dark/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg border-t-4 border-red-600">
+                    <h4 class="text-xl font-bold mb-4 text-center text-white bg-red-600 py-2 rounded-lg shadow-md" data-i18n="cat_nasgor_lauk">NASGOR LAUK (6)</h4>
+                    <ul class="space-y-3">
+                        <li class="flex justify-between items-center border-b border-gray-200 dark:border-gray-700 pb-2">
+                            <div>
+                                <span class="font-medium text-jawa-brown dark:text-gray-200" data-i18n="menu_item_nasgor_paha">1. Nasgor paha goreng</span>
+                                <p class="text-xs text-gray-500 dark:text-gray-400 ml-3" data-i18n="menu_item_nasgor_paha_desc">Nasgor Telur Dadar</p>
+                            </div>
+                            <span class="font-bold text-red-600 dark:text-red-400">Rp 15.000</span>
+                        </li>
+                        <li class="flex justify-between items-center border-b border-gray-200 dark:border-gray-700 pb-2">
+                            <span class="font-medium text-jawa-brown dark:text-gray-200" data-i18n="menu_item_nasgor_telur">2. Nasgor Telur Dadar</span>
+                            <span class="font-bold text-red-600 dark:text-red-400">Rp 12.000</span>
+                        </li>
+                        <li class="flex justify-between items-center border-b border-gray-200 dark:border-gray-700 pb-2">
+                            <span class="font-medium text-jawa-brown dark:text-gray-200" data-i18n="menu_item_nasgor_ceplok">3. Nasgor Telur Ceplok</span>
+                            <span class="font-bold text-red-600 dark:text-red-400">Rp 12.000</span>
+                        </li>
+                        <li class="flex justify-between items-center border-b border-gray-200 dark:border-gray-700 pb-2">
+                            <span class="font-medium text-jawa-brown dark:text-gray-200" data-i18n="menu_item_nasgor_sosis">4. Nasgor Sosis</span>
+                            <span class="font-bold text-red-600 dark:text-red-400">Rp 12.000</span>
+                        </li>
+                        <li class="flex justify-between items-center border-b border-gray-200 dark:border-gray-700 pb-2">
+                            <span class="font-medium text-jawa-brown dark:text-gray-200" data-i18n="menu_item_nasgor_bakso">5. Nasgor Bakso</span>
+                            <span class="font-bold text-red-600 dark:text-red-400">Rp 12.000</span>
+                        </li>
+                        <li class="flex justify-between items-center">
+                            <span class="font-medium text-jawa-brown dark:text-gray-200" data-i18n="menu_item_nasgor_ayam">6. Nasgor Ayam</span>
+                            <span class="font-bold text-red-600 dark:text-red-400">Rp 12.000</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Category: Nasgor Biasa -->
+                <div class="bg-white/80 dark:bg-jawa-dark/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg border-t-4 border-orange-500">
+                    <h4 class="text-xl font-bold mb-4 text-center text-white bg-orange-500 py-2 rounded-lg shadow-md" data-i18n="cat_nasgor_biasa">NASGOR BIASA (4)</h4>
+                    <ul class="space-y-4">
+                        <li class="flex justify-between items-center border-b border-gray-200 dark:border-gray-700 pb-2">
+                            <span class="font-medium text-jawa-brown dark:text-gray-200" data-i18n="menu_item_nasgor_biasa">1. Nasgor Biasa</span>
+                            <span class="font-bold text-orange-600 dark:text-orange-400">Rp 8.000</span>
+                        </li>
+                        <li class="flex justify-between items-center border-b border-gray-200 dark:border-gray-700 pb-2">
+                            <span class="font-medium text-jawa-brown dark:text-gray-200" data-i18n="menu_item_nasgor_kari">2. Nasgor Kari</span>
+                            <span class="font-bold text-orange-600 dark:text-orange-400">Rp 10.000</span>
+                        </li>
+                        <li class="flex justify-between items-center border-b border-gray-200 dark:border-gray-700 pb-2">
+                            <span class="font-medium text-jawa-brown dark:text-gray-200" data-i18n="menu_item_nasgor_sosis_biasa">3. Nasgor Sosis</span>
+                            <span class="font-bold text-orange-600 dark:text-orange-400">Rp 13.000</span>
+                        </li>
+                        <li class="flex justify-between items-center">
+                            <span class="font-medium text-jawa-brown dark:text-gray-200" data-i18n="menu_item_nasgor_ayam_biasa">4. Nasgor Ayam</span>
+                            <span class="font-bold text-orange-600 dark:text-orange-400">Rp 15.000</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Category: Nasi Sop Enak -->
+                <div class="bg-white/80 dark:bg-jawa-dark/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg border-t-4 border-green-600">
+                    <h4 class="text-xl font-bold mb-4 text-center text-white bg-green-600 py-2 rounded-lg shadow-md" data-i18n="cat_nasi_sop">NASI SOP ENAK (2)</h4>
+                    <ul class="space-y-4">
+                        <li class="flex justify-between items-center border-b border-gray-200 dark:border-gray-700 pb-2">
+                            <span class="font-medium text-jawa-brown dark:text-gray-200" data-i18n="menu_item_sop_telur_ayam">1. Sop telur ayam paha</span>
+                            <span class="font-bold text-green-700 dark:text-green-400">Rp 25.000</span>
+                        </li>
+                        <li class="flex justify-between items-center">
+                            <span class="font-medium text-jawa-brown dark:text-gray-200" data-i18n="menu_item_sop_ayam_bawah">2. Sop ayam paha bawah</span>
+                            <span class="font-bold text-green-700 dark:text-green-400">Rp 20.000</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Category: Mie Sayur Telur -->
+                <div class="bg-white/80 dark:bg-jawa-dark/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg border-t-4 border-red-600">
+                    <h4 class="text-xl font-bold mb-4 text-center text-white bg-red-600 py-2 rounded-lg shadow-md" data-i18n="cat_mie_sayur">MIE SAYUR TELUR (2)</h4>
+                    <ul class="space-y-4">
+                        <li class="flex justify-between items-center border-b border-gray-200 dark:border-gray-700 pb-2">
+                            <span class="font-medium text-jawa-brown dark:text-gray-200" data-i18n="menu_item_mie_sayur_telur">1. Mie Sayur Telur</span>
+                            <span class="font-bold text-red-600 dark:text-red-400">Rp 10.000</span>
+                        </li>
+                        <li class="flex justify-between items-center">
+                            <span class="font-medium text-jawa-brown dark:text-gray-200" data-i18n="menu_item_mie_sayur_goreng">2. Mie Sayur Goreng</span>
+                            <span class="font-bold text-red-600 dark:text-red-400">Rp 10.000</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Category: NasiBox -->
+                <div class="bg-white/80 dark:bg-jawa-dark/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg border-t-4 border-emerald-600">
+                    <h4 class="text-xl font-bold mb-4 text-center text-white bg-emerald-600 py-2 rounded-lg shadow-md" data-i18n="cat_nasibox">NASIBOX (6)</h4>
+                    <ul class="space-y-3">
+                        <li class="flex justify-between items-center border-b border-gray-200 dark:border-gray-700 pb-2">
+                            <span class="font-medium text-jawa-brown dark:text-gray-200" data-i18n="menu_item_box_telur_rebus">1. NasiBox Telur Rebus Utuh</span>
+                            <span class="font-bold text-emerald-700 dark:text-emerald-400">Rp 13.000</span>
+                        </li>
+                        <li class="flex justify-between items-center border-b border-gray-200 dark:border-gray-700 pb-2">
+                            <span class="font-medium text-jawa-brown dark:text-gray-200" data-i18n="menu_item_box_ayam_goreng">2. NasiBox Ayam Goreng</span>
+                            <span class="font-bold text-emerald-700 dark:text-emerald-400">Rp 15.000</span>
+                        </li>
+                        <li class="flex justify-between items-center border-b border-gray-200 dark:border-gray-700 pb-2">
+                            <span class="font-medium text-jawa-brown dark:text-gray-200" data-i18n="menu_item_box_telur_dadar">3. NasiBox Telur Dadar</span>
+                            <span class="font-bold text-emerald-700 dark:text-emerald-400">Rp 13.000</span>
+                        </li>
+                        <li class="flex justify-between items-center border-b border-gray-200 dark:border-gray-700 pb-2">
+                            <span class="font-medium text-jawa-brown dark:text-gray-200" data-i18n="menu_item_box_telur_ceplok">4. NasiBox Telur Ceplok</span>
+                            <span class="font-bold text-emerald-700 dark:text-emerald-400">Rp 13.000</span>
+                        </li>
+                        <li class="flex justify-between items-center border-b border-gray-200 dark:border-gray-700 pb-2">
+                            <span class="font-medium text-jawa-brown dark:text-gray-200" data-i18n="menu_item_box_ikan">5. Nasi Box Ikan Bandeng Presto</span>
+                            <span class="font-bold text-emerald-700 dark:text-emerald-400">Rp 13.000</span>
+                        </li>
+                        <li class="flex justify-between items-center">
+                            <span class="font-medium text-jawa-brown dark:text-gray-200" data-i18n="menu_item_box_ayam_penyet">6. Nasi Box Ayam Penyet</span>
+                            <span class="font-bold text-emerald-700 dark:text-emerald-400">Rp 15.000</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Category: Camilan -->
+                <div class="bg-white/80 dark:bg-jawa-dark/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg border-t-4 border-orange-600">
+                    <h4 class="text-xl font-bold mb-4 text-center text-white bg-orange-600 py-2 rounded-lg shadow-md" data-i18n="cat_camilan">CAMILAN (4)</h4>
+                    <ul class="space-y-4">
+                        <li class="flex justify-between items-center border-b border-gray-200 dark:border-gray-700 pb-2">
+                            <span class="font-medium text-jawa-brown dark:text-gray-200" data-i18n="menu_item_camilan_pisang">1. Pisang Goreng</span>
+                            <span class="font-bold text-orange-700 dark:text-orange-400">Rp 5.000</span>
+                        </li>
+                        <li class="flex justify-between items-center border-b border-gray-200 dark:border-gray-700 pb-2">
+                            <span class="font-medium text-jawa-brown dark:text-gray-200" data-i18n="menu_item_camilan_mendoan">2. Tempe Mendoan</span>
+                            <span class="font-bold text-orange-700 dark:text-orange-400">Rp 5.000</span>
+                        </li>
+                        <li class="flex justify-between items-center border-b border-gray-200 dark:border-gray-700 pb-2">
+                            <div>
+                                <span class="font-medium text-jawa-brown dark:text-gray-200" data-i18n="menu_item_camilan_tahu">3. Tahu Bakso Goreng</span>
+                                <p class="text-xs text-gray-500 dark:text-gray-400 ml-3" data-i18n="menu_item_camilan_tahu_desc">Balut Telur</p>
+                            </div>
+                            <span class="font-bold text-orange-700 dark:text-orange-400">Rp 8.000</span>
+                        </li>
+                        <li class="flex justify-between items-center">
+                            <span class="font-medium text-jawa-brown dark:text-gray-200" data-i18n="menu_item_camilan_tempe">4. Tempe Goreng</span>
+                            <span class="font-bold text-orange-700 dark:text-orange-400">Rp 7.000</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Category: Minuman (Spans 2 columns on large screens) -->
+                <div class="bg-white/80 dark:bg-jawa-dark/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg border-t-4 border-blue-800 lg:col-span-2">
+                    <h4 class="text-xl font-bold mb-4 text-center text-white bg-blue-800 py-2 rounded-lg shadow-md" data-i18n="cat_minuman">MINUMAN (8)</h4>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-3">
+                        <div class="flex justify-between items-center border-b border-gray-200 dark:border-gray-700 pb-2">
+                            <span class="font-medium text-jawa-brown dark:text-gray-200" data-i18n="menu_item_minum_air">1. Air Putih</span>
+                            <span class="font-bold text-blue-800 dark:text-blue-400">Rp 2.000</span>
+                        </div>
+                        <div class="flex justify-between items-center border-b border-gray-200 dark:border-gray-700 pb-2">
+                            <span class="font-medium text-jawa-brown dark:text-gray-200" data-i18n="menu_item_minum_teh">5. Teh Panas Jumbo</span>
+                            <span class="font-bold text-blue-800 dark:text-blue-400">Rp 3.000</span>
+                        </div>
+                        <div class="flex justify-between items-center border-b border-gray-200 dark:border-gray-700 pb-2">
+                            <span class="font-medium text-jawa-brown dark:text-gray-200" data-i18n="menu_item_minum_kopi">2. Kopi Hitam Panas</span>
+                            <span class="font-bold text-blue-800 dark:text-blue-400">Rp 5.000</span>
+                        </div>
+                        <div class="flex justify-between items-center border-b border-gray-200 dark:border-gray-700 pb-2">
+                            <span class="font-medium text-jawa-brown dark:text-gray-200" data-i18n="menu_item_minum_esteh">6. Es Teh Jumbo</span>
+                            <span class="font-bold text-blue-800 dark:text-blue-400">Rp 3.000</span>
+                        </div>
+                        <div class="flex justify-between items-center border-b border-gray-200 dark:border-gray-700 pb-2">
+                            <span class="font-medium text-jawa-brown dark:text-gray-200" data-i18n="menu_item_minum_eskopi">3. Es Kopi Hitam</span>
+                            <span class="font-bold text-blue-800 dark:text-blue-400">Rp 5.000</span>
+                        </div>
+                        <div class="flex justify-between items-center border-b border-gray-200 dark:border-gray-700 pb-2">
+                            <span class="font-medium text-jawa-brown dark:text-gray-200" data-i18n="menu_item_minum_mineral">7. Air Mineral</span>
+                            <span class="font-bold text-blue-800 dark:text-blue-400">Rp 5.000</span>
+                        </div>
+                        <div class="flex justify-between items-center border-b sm:border-none border-gray-200 dark:border-gray-700 pb-2">
+                            <span class="font-medium text-jawa-brown dark:text-gray-200" data-i18n="menu_item_minum_susujahe">4. Susu Jahe</span>
+                            <span class="font-bold text-blue-800 dark:text-blue-400">Rp 5.000</span>
+                        </div>
+                        <div class="flex justify-between items-center pb-2">
+                            <span class="font-medium text-jawa-brown dark:text-gray-200" data-i18n="menu_item_minum_essusu">8. Es Susu Putih</span>
+                            <span class="font-bold text-blue-800 dark:text-blue-400">Rp 5.000</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Category: Tambahan -->
+                <div class="bg-white/80 dark:bg-jawa-dark/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg border-t-4 border-amber-700">
+                    <h4 class="text-xl font-bold mb-4 text-center text-white bg-amber-700 py-2 rounded-lg shadow-md" data-i18n="cat_tambahan">TAMBAHAN (2)</h4>
+                    <ul class="space-y-4">
+                        <li class="flex justify-between items-center border-b border-gray-200 dark:border-gray-700 pb-2">
+                            <span class="font-medium text-jawa-brown dark:text-gray-200" data-i18n="menu_item_tambah_nasi">1. Nasi Putih</span>
+                            <span class="font-bold text-amber-700 dark:text-amber-500">Rp 2.500</span>
+                        </li>
+                        <li class="flex justify-between items-center">
+                            <span class="font-medium text-jawa-brown dark:text-gray-200" data-i18n="menu_item_tambah_kolak">2. Es Kolak Pisang</span>
+                            <span class="font-bold text-amber-700 dark:text-amber-500">Rp 7.000</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Order Banner -->
+            <div class="mt-12 bg-white dark:bg-jawa-dark rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
+                <div class="flex flex-col md:flex-row items-center justify-between p-6 md:p-8 gap-6">
+                    <div class="flex items-center gap-4">
+                        <div class="w-16 h-16 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center flex-shrink-0">
+                            <svg class="w-8 h-8 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <h4 class="text-xl font-bold text-jawa-brown dark:text-white uppercase" data-i18n="order_title_antar">Terima Pesanan Antar</h4>
+                            <p class="text-sm text-gray-600 dark:text-gray-400" data-i18n="order_desc_antar">Area Sleman & Sekitarnya</p>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col items-center bg-green-50 dark:bg-green-900/20 px-8 py-4 rounded-xl border border-green-200 dark:border-green-800">
+                        <p class="text-sm font-bold text-green-700 dark:text-green-400 mb-1" data-i18n="order_wa_title">TERIMA PESANAN WA:</p>
+                        <a href="https://wa.me/6285191252211" target="_blank" class="flex items-center gap-2 text-2xl md:text-3xl font-black text-green-600 dark:text-green-400 hover:text-green-700 transition-colors">
+                            <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 00-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+                            </svg>
+                            0851-9125-2211
+                        </a>
+                        <div class="flex gap-4 mt-2 text-sm font-semibold">
+                            <span class="text-orange-500">ShopeeFood</span>
+                            <span class="text-gray-400">|</span>
+                            <span class="text-green-500">GrabFood</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-yellow-400 text-black py-2 text-center text-xs sm:text-sm font-bold tracking-wider flex justify-center flex-wrap gap-x-6 gap-y-2">
+                    <span data-i18n="tag_rasa">👍 RASA ENAK</span>
+                    <span data-i18n="tag_porsi">🍽️ PORSI PAS</span>
+                    <span data-i18n="tag_harga">💰 HARGA BERSAHABAT</span>
+                    <span data-i18n="tag_kemasan">📦 KEMASAN AMAN</span>
+                    <span data-i18n="tag_pesan">🚀 PESAN CEPAT</span>
+                    <span data-i18n="tag_antar">🛵 ANTAR TEPAT</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Trust & Legality Section -->
+    <section class="py-12 bg-jawa-gold/10 border-y border-jawa-gold/30">
+        <div class="max-w-4xl mx-auto px-4 text-center">
+            <svg class="w-12 h-12 text-jawa-gold mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+            </svg>
+            <h3 class="text-2xl font-serif font-bold text-jawa-brown dark:text-white mb-2" data-i18n="legal_title">Terdaftar & Terpercaya</h3>
+            <p class="text-gray-700 dark:text-gray-300" data-i18n="legal_desc">Dapoer Barokah beroperasi secara resmi dan telah tersertifikasi oleh Pemerintah RI melalui sistem OSS dengan <strong>NIB: 1709250093805</strong>. Kami berkomitmen menyajikan kebersihan dan kehalalan produk.</p>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="footer" class="bg-jawa-brown text-jawa-light pt-16 pb-8 border-t-4 border-jawa-gold">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-12 mb-12">
+                <!-- Brand -->
+                <div>
+                    <h4 class="font-serif text-3xl font-bold text-jawa-gold mb-4">Dapoer Barokah</h4>
+                    <p class="text-gray-300 text-sm" data-i18n="footer_desc">Hadir menyajikan kuliner yang diolah dengan tangan sendiri dari dapur kami untuk keluarga Anda. Dari Dapur Kecil, Menuju Barokah.</p>
+                </div>
+
+                <!-- Location -->
+                <div>
+                    <h4 class="font-serif text-xl font-semibold mb-4 text-white" data-i18n="footer_loc_title">Lokasi Kami</h4>
+                    <ul class="space-y-3 text-sm text-gray-300">
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-jawa-gold mr-3 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                            </svg>
+                            <span>Jl. Bima No. 5 Gentan, Sinduharjo, Ngaglik, Sleman</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-jawa-gold mr-3 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                            </svg>
+                            <span>Jl. Kaliurang Km. 10, Sleman</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Contact -->
+                <div>
+                    <h4 class="font-serif text-xl font-semibold mb-4 text-white" data-i18n="footer_contact_title">Hubungi Kami</h4>
+                    <p class="text-sm text-gray-300 mb-4" data-i18n="footer_contact_desc">Pemesanan online maupun pertanyaan silakan kunjungi website resmi kami.</p>
+                    <a href="https://www.dapurbarokah.online/" target="_blank" class="inline-flex items-center text-jawa-gold hover:text-white transition-colors">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"></path>
+                        </svg>
+                        www.dapurbarokah.online
+                    </a>
+                </div>
+            </div>
+
+            <div class="border-t border-gray-700 pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-gray-400">
+                <p>&copy; 2026 Dapoer Barokah Sleman. <span data-i18n="footer_copyright">Hak cipta dilindungi.</span></p>
+                <p class="mt-2 md:mt-0">Owner: Latif Safruddin</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Script for Interactivity -->
+    <script>
+        // 1. Theme Logic
+        const html = document.documentElement;
+        const themeToggle = document.getElementById('themeToggle');
+        const themeToggleMob = document.getElementById('themeToggleMob');
+        const iconSun = document.getElementById('icon-sun');
+        const iconMoon = document.getElementById('icon-moon');
+        const themeTextMob = document.getElementById('theme-text-mob');
+
+        // Check Local Storage or OS preference
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            html.classList.add('dark');
+            updateThemeUI(true);
+        } else {
+            html.classList.remove('dark');
+            updateThemeUI(false);
+        }
+
+        function updateThemeUI(isDark) {
+            if (isDark) {
+                iconSun.classList.remove('hidden');
+                iconMoon.classList.add('hidden');
+                themeTextMob.textContent = "Mode Terang / Light Mode";
+            } else {
+                iconSun.classList.add('hidden');
+                iconMoon.classList.remove('hidden');
+                themeTextMob.textContent = "Mode Gelap / Dark Mode";
+            }
+        }
+
+        function toggleTheme() {
+            html.classList.toggle('dark');
+            const isDark = html.classList.contains('dark');
+            localStorage.theme = isDark ? 'dark' : 'light';
+            updateThemeUI(isDark);
+        }
+
+        themeToggle.addEventListener('click', toggleTheme);
+        themeToggleMob.addEventListener('click', toggleTheme);
+
+        // 2. Mobile Menu Logic
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Close mobile menu when a link is clicked
+        mobileMenu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+            });
+        });
+
+        // 3. Language Translation Logic
+        const translations = {
+            id: {
+                nav_home: "Beranda",
+                nav_about: "Kisah Kami",
+                nav_menu: "Menu",
+                nav_contact: "Lokasi",
+                hero_badge: "Berdiri Sejak 2024",
+                hero_title_1: "Cita Rasa Klasik Jawa,",
+                hero_title_2: "Sentuhan Modern",
+                hero_desc: "Menyajikan kehangatan masakan rumahan dengan resep warisan Dapoer Barokah Sleman. Halal, lezat, dan penuh barokah.",
+                hero_btn_1: "Jelajah Menu",
+                hero_btn_2: "Kunjungi Kami",
+                about_subtitle: "Kisah Kami",
+                about_title: "Dari Dapur Kecil Menuju Dapoer Barokah",
+                about_p1: "Bagi seorang Latif Safruddin, masa kecilnya dihabiskan dengan cara yang berbeda. Di saat teman sebaya menunggu hidangan siap, Latif kecil sudah mengakrabi kepulan asap dan aroma bumbu di dapur berkat didikan mandiri orang tuanya.",
+                about_p2: "Sejak SD, ia belajar memahami bagaimana rasa diciptakan. Apa yang awalnya keharusan untuk mengenyangkan perut, bertransformasi menjadi sebuah gairah yang mendalam.",
+                about_p3: "Kini, melalui <strong>Dapoer Barokah</strong> di Sleman, ia membuktikan bahwa keahlian yang dipupuk selama puluhan tahun mampu menjadi hidangan yang lezat, membawa keberkahan, dan dinikmati banyak orang.",
+                menu_subtitle: "Menu Spesial",
+                menu_title: "Hidangan Andalan Kami",
+                menu_1_title: "Nasi Kuning Ayam Kampung",
+                menu_1_desc: "Beras pilihan dimasak dengan santan, kunyit asli, dan kaldu ayam kampung. Disajikan lengkap dengan sambal bajak dan ayam ungkep yang empuk.",
+                menu_2_title: "Soto Legendaris Sleman",
+                menu_2_desc: "Kuah bening segar berpadu dengan rempah tradisional, daging empuk, dan irisan daun bawang. Resep soto khas yang menghangatkan perut.",
+                menu_3_title: "Nasi Goreng Kari",
+                menu_3_desc: "Paduan nasi goreng rumahan dengan bumbu kari yang pekat dan aromatik. Disajikan dengan kerupuk renyah penambah selera.",
+                menu_4_title: "Pisang Goreng Klasik",
+                menu_4_desc: "Pisang pilihan berbalut adonan tepung keemasan. Renyah di luar, lembut dan manis di dalam. Simbol kesederhanaan teman minum teh.",
+                legal_title: "Terdaftar & Terpercaya",
+                legal_desc: "Dapoer Barokah beroperasi secara resmi dan telah tersertifikasi oleh Pemerintah RI melalui sistem OSS dengan <strong>NIB: 1709250093805</strong>. Kami berkomitmen menyajikan kebersihan dan kehalalan produk.",
+                footer_desc: "Hadir menyajikan kuliner yang diolah dengan tangan sendiri dari dapur kami untuk keluarga Anda. Dari Dapur Kecil, Menuju Barokah.",
+                footer_loc_title: "Lokasi Kami",
+                footer_contact_title: "Hubungi Kami",
+                footer_contact_desc: "Pemesanan online maupun pertanyaan silakan kunjungi website resmi kami.",
+                footer_copyright: "Hak cipta dilindungi.",
+                
+                // New translations for the updated menu
+                menu_badge: "HALAL & HIGIENIS - BAHAN BERKUALITAS",
+                menu_tagline: "NASIBOK ONLINE PERTAMA DI JOGJA",
+                cat_nasgor_lauk: "NASGOR LAUK (6)",
+                menu_item_nasgor_paha: "1. Nasgor paha goreng",
+                menu_item_nasgor_paha_desc: "Nasgor Telur Dadar",
+                menu_item_nasgor_telur: "2. Nasgor Telur Dadar",
+                menu_item_nasgor_ceplok: "3. Nasgor Telur Ceplok",
+                menu_item_nasgor_sosis: "4. Nasgor Sosis",
+                menu_item_nasgor_bakso: "5. Nasgor Bakso",
+                menu_item_nasgor_ayam: "6. Nasgor Ayam",
+                
+                cat_nasgor_biasa: "NASGOR BIASA (4)",
+                menu_item_nasgor_biasa: "1. Nasgor Biasa",
+                menu_item_nasgor_kari: "2. Nasgor Kari",
+                menu_item_nasgor_sosis_biasa: "3. Nasgor Sosis",
+                menu_item_nasgor_ayam_biasa: "4. Nasgor Ayam",
+                
+                cat_nasi_sop: "NASI SOP ENAK (2)",
+                menu_item_sop_telur_ayam: "1. Sop telur ayam paha",
+                menu_item_sop_ayam_bawah: "2. Sop ayam paha bawah",
+                
+                cat_mie_sayur: "MIE SAYUR TELUR (2)",
+                menu_item_mie_sayur_telur: "1. Mie Sayur Telur",
+                menu_item_mie_sayur_goreng: "2. Mie Sayur Goreng",
+                
+                cat_nasibox: "NASIBOX (6)",
+                menu_item_box_telur_rebus: "1. NasiBox Telur Rebus Utuh",
+                menu_item_box_ayam_goreng: "2. NasiBox Ayam Goreng",
+                menu_item_box_telur_dadar: "3. NasiBox Telur Dadar",
+                menu_item_box_telur_ceplok: "4. NasiBox Telur Ceplok",
+                menu_item_box_ikan: "5. Nasi Box Ikan Bandeng Presto",
+                menu_item_box_ayam_penyet: "6. Nasi Box Ayam Penyet",
+                
+                cat_camilan: "CAMILAN (4)",
+                menu_item_camilan_pisang: "1. Pisang Goreng",
+                menu_item_camilan_mendoan: "2. Tempe Mendoan",
+                menu_item_camilan_tahu: "3. Tahu Bakso Goreng",
+                menu_item_camilan_tahu_desc: "Balut Telur",
+                menu_item_camilan_tempe: "4. Tempe Goreng",
+                
+                cat_minuman: "MINUMAN (8)",
+                menu_item_minum_air: "1. Air Putih",
+                menu_item_minum_teh: "5. Teh Panas Jumbo",
+                menu_item_minum_kopi: "2. Kopi Hitam Panas",
+                menu_item_minum_esteh: "6. Es Teh Jumbo",
+                menu_item_minum_eskopi: "3. Es Kopi Hitam",
+                menu_item_minum_mineral: "7. Air Mineral",
+                menu_item_minum_susujahe: "4. Susu Jahe",
+                menu_item_minum_essusu: "8. Es Susu Putih",
+                
+                cat_tambahan: "TAMBAHAN (2)",
+                menu_item_tambah_nasi: "1. Nasi Putih",
+                menu_item_tambah_kolak: "2. Es Kolak Pisang",
+                
+                order_title_antar: "Terima Pesanan Antar",
+                order_desc_antar: "Area Sleman & Sekitarnya",
+                order_wa_title: "TERIMA PESANAN WA:",
+                tag_rasa: "👍 RASA ENAK",
+                tag_porsi: "🍽️ PORSI PAS",
+                tag_harga: "💰 HARGA BERSAHABAT",
+                tag_kemasan: "📦 KEMASAN AMAN",
+                tag_pesan: "🚀 PESAN CEPAT",
+                tag_antar: "🛵 ANTAR TEPAT"
+            },
+            en: {
+                nav_home: "Home",
+                nav_about: "Our Story",
+                nav_menu: "Menu",
+                nav_contact: "Location",
+                hero_badge: "Established in 2024",
+                hero_title_1: "Classic Javanese Taste,",
+                hero_title_2: "Modern Touch",
+                hero_desc: "Serving the warmth of home cooking with Dapoer Barokah Sleman's heritage recipes. Halal, delicious, and full of blessings.",
+                hero_btn_1: "Explore Menu",
+                hero_btn_2: "Visit Us",
+                about_subtitle: "Our Story",
+                about_title: "From a Small Kitchen to Dapoer Barokah",
+                about_p1: "For Latif Safruddin, his childhood was spent differently. While his peers waited for meals to be ready, young Latif familiarized himself with smoke and the aroma of spices in the kitchen due to his parents' independent upbringing.",
+                about_p2: "Since elementary school, he learned to understand how flavors are created. What started as a necessity to fill the stomach transformed into a deep passion.",
+                about_p3: "Now, through <strong>Dapoer Barokah</strong> in Sleman, he proves that the skills honed over decades can become delicious meals, bring blessings, and be enjoyed by many.",
+                menu_subtitle: "Special Menu",
+                menu_title: "Our Signature Dishes",
+                menu_1_title: "Kampung Chicken Yellow Rice",
+                menu_1_desc: "Premium rice cooked with coconut milk, authentic turmeric, and free-range chicken broth. Served with bajak sambal and tender spiced chicken.",
+                menu_2_title: "Legendary Sleman Soto",
+                menu_2_desc: "Fresh clear broth combined with traditional spices, tender meat, and sliced scallions. A special soto recipe that warms the stomach.",
+                menu_3_title: "Curry Fried Rice",
+                menu_3_desc: "A blend of home-style fried rice with thick and aromatic curry spices. Served with crispy crackers as an appetizer.",
+                menu_4_title: "Classic Fried Banana",
+                menu_4_desc: "Selected bananas coated in golden flour batter. Crispy on the outside, soft and sweet on the inside. A symbol of simplicity for tea time.",
+                legal_title: "Registered & Trusted",
+                legal_desc: "Dapoer Barokah operates officially and has been certified by the Indonesian Government through the OSS system with <strong>NIB: 1709250093805</strong>. We are committed to serving clean and halal products.",
+                footer_desc: "Presenting culinary creations cooked with our own hands from our kitchen to your family. From a Small Kitchen, Towards Blessings.",
+                footer_loc_title: "Our Location",
+                footer_contact_title: "Contact Us",
+                footer_contact_desc: "For online orders or inquiries, please visit our official website.",
+                footer_copyright: "All rights reserved.",
+
+                // New translations for the updated menu (English)
+                menu_badge: "HALAL & HYGIENIC - QUALITY INGREDIENTS",
+                menu_tagline: "FIRST ONLINE RICE BOX IN JOGJA",
+                cat_nasgor_lauk: "FRIED RICE + SIDES (6)",
+                menu_item_nasgor_paha: "1. Fried Rice w/ Fried Thigh",
+                menu_item_nasgor_paha_desc: "Omelette Fried Rice",
+                menu_item_nasgor_telur: "2. Omelette Fried Rice",
+                menu_item_nasgor_ceplok: "3. Sunny-Side Up Fried Rice",
+                menu_item_nasgor_sosis: "4. Sausage Fried Rice",
+                menu_item_nasgor_bakso: "5. Meatball Fried Rice",
+                menu_item_nasgor_ayam: "6. Chicken Fried Rice",
+                
+                cat_nasgor_biasa: "BASIC FRIED RICE (4)",
+                menu_item_nasgor_biasa: "1. Basic Fried Rice",
+                menu_item_nasgor_kari: "2. Curry Fried Rice",
+                menu_item_nasgor_sosis_biasa: "3. Sausage Fried Rice",
+                menu_item_nasgor_ayam_biasa: "4. Chicken Fried Rice",
+                
+                cat_nasi_sop: "DELICIOUS SOUP & RICE (2)",
+                menu_item_sop_telur_ayam: "1. Egg & Chicken Thigh Soup",
+                menu_item_sop_ayam_bawah: "2. Drumstick Soup",
+                
+                cat_mie_sayur: "VEGGIE EGG NOODLES (2)",
+                menu_item_mie_sayur_telur: "1. Veggie Egg Noodle Soup",
+                menu_item_mie_sayur_goreng: "2. Fried Veggie Egg Noodles",
+                
+                cat_nasibox: "RICE BOX (6)",
+                menu_item_box_telur_rebus: "1. Rice Box Whole Boiled Egg",
+                menu_item_box_ayam_goreng: "2. Rice Box Fried Chicken",
+                menu_item_box_telur_dadar: "3. Rice Box Omelette",
+                menu_item_box_telur_ceplok: "4. Rice Box Sunny-Side Up",
+                menu_item_box_ikan: "5. Rice Box Pressure-Cooked Milkfish",
+                menu_item_box_ayam_penyet: "6. Rice Box Smashed Fried Chicken",
+                
+                cat_camilan: "SNACKS (4)",
+                menu_item_camilan_pisang: "1. Fried Banana",
+                menu_item_camilan_mendoan: "2. Tempeh Mendoan",
+                menu_item_camilan_tahu: "3. Fried Meatball Tofu",
+                menu_item_camilan_tahu_desc: "Egg Battered",
+                menu_item_camilan_tempe: "4. Fried Tempeh",
+                
+                cat_minuman: "BEVERAGES (8)",
+                menu_item_minum_air: "1. Mineral Water (Glass)",
+                menu_item_minum_teh: "5. Jumbo Hot Tea",
+                menu_item_minum_kopi: "2. Hot Black Coffee",
+                menu_item_minum_esteh: "6. Jumbo Iced Tea",
+                menu_item_minum_eskopi: "3. Iced Black Coffee",
+                menu_item_minum_mineral: "7. Bottled Water",
+                menu_item_minum_susujahe: "4. Ginger Milk",
+                menu_item_minum_essusu: "8. Iced White Milk",
+                
+                cat_tambahan: "EXTRAS (2)",
+                menu_item_tambah_nasi: "1. White Rice",
+                menu_item_tambah_kolak: "2. Banana Compote Ice",
+                
+                order_title_antar: "Delivery Orders Accepted",
+                order_desc_antar: "Sleman Area & Surroundings",
+                order_wa_title: "ORDER VIA WA:",
+                tag_rasa: "👍 GREAT TASTE",
+                tag_porsi: "🍽️ PERFECT PORTION",
+                tag_harga: "💰 FRIENDLY PRICE",
+                tag_kemasan: "📦 SAFE PACKAGING",
+                tag_pesan: "🚀 FAST ORDER",
+                tag_antar: "🛵 ON-TIME DELIVERY"
+            }
+        };
+
+        let currentLang = 'id';
+        const langToggleBtn = document.getElementById('langToggle');
+        const langToggleMobBtn = document.getElementById('langToggleMob');
+
+        function setLanguage(lang) {
+            currentLang = lang;
+            
+            // Update button texts
+            const btnText = lang === 'id' ? 'EN' : 'ID';
+            langToggleBtn.textContent = btnText;
+            langToggleMobBtn.textContent = btnText;
+
+            // Update DOM text content
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (translations[lang] && translations[lang][key]) {
+                    // Using innerHTML to support bold tags (like <strong>) in the translation
+                    el.innerHTML = translations[lang][key]; 
+                }
+            });
+        }
+
+        function toggleLanguage() {
+            setLanguage(currentLang === 'id' ? 'en' : 'id');
+        }
+
+        langToggleBtn.addEventListener('click', toggleLanguage);
+        langToggleMobBtn.addEventListener('click', toggleLanguage);
+
+    </script>
+</body>
+</html>
